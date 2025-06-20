@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String      @id @default(uuid()) @db.Uuid
+  email         String      @unique
+  password      String
+  fullName      String
+  parentId      String?     @db.Uuid
+  parent        User?       @relation("UserReferrals", fields: [parentId], references: [id])
+  referrals     User[]      @relation("UserReferrals")
+  referralCode  String      @unique @db.Char(8)
+  active        Boolean     @default(true)
+  createdAt     DateTime    @default(now())
+
+  purchases     Purchase[]
+  earnings      Earning[]   @relation("Earner")
+  earningsFrom  Earning[]   @relation("Source")
+}
+
+model Purchase {
+  id        String    @id @default(uuid()) @db.Uuid
+  buyerId   String    @db.Uuid
+  buyer     User      @relation(fields: [buyerId], references: [id])
+  amount    Decimal   @db.Decimal(10, 2)
+  createdAt DateTime  @default(now())
+
+  earnings  Earning[]
+
+  @@index([buyerId])
+}
+
+model Earning {
+  id           String    @id @default(uuid()) @db.Uuid
+  earnerId     String    @db.Uuid
+  earner       User      @relation("Earner", fields: [earnerId], references: [id])
+
+  sourceUserId String    @db.Uuid
+  sourceUser   User      @relation("Source", fields: [sourceUserId], references: [id])
+
+  purchaseId   String    @db.Uuid
+  purchase     Purchase  @relation(fields: [purchaseId], references: [id])
+
+  level        Int
+  percent      Decimal   @db.Decimal(4, 2)
+  amount       Decimal   @db.Decimal(10, 2)
+  createdAt    DateTime  @default(now())
+
+  @@index([earnerId, createdAt])
+  @@index([purchaseId])
+}
