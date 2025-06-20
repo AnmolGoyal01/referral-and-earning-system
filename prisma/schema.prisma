@@ -15,7 +15,6 @@ model User {
   parentId      String?     @db.Uuid
   parent        User?       @relation("UserReferrals", fields: [parentId], references: [id])
   referrals     User[]      @relation("UserReferrals")
-  referralCode  String      @unique @db.Char(8)
   active        Boolean     @default(true)
   createdAt     DateTime    @default(now())
 
