@@ -12,7 +12,7 @@ import { isValidUUID } from "../utils/utilityFunctions.js";
 import { logger } from "../utils/logger.js";
 
 export const register = async ({ fullName, email, password, parentId }) => {
-    logger.info(`Register attempt for ${email}`);
+    logger.info(`Register attempt for email: ${email}`);
 
     const existing = await findUserByEmail(email);
     if (existing) throw new ApiError(409, "Email already exists");
@@ -37,14 +37,14 @@ export const register = async ({ fullName, email, password, parentId }) => {
         parentId,
     });
 
-    logger.info(`User created: ${user.id}`);
+    logger.info(`User created with id: ${user.id}`);
 
     const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: "7d" });
     return { token, user };
 };
 
 export const login = async ({ email, password }) => {
-    logger.info(`Login attempt for ${email}`);
+    logger.info(`Login attempt for email: ${email}`);
 
     const user = await findUserByEmail(email);
     if (!user) throw new ApiError(404, "User not found");
@@ -53,7 +53,7 @@ export const login = async ({ email, password }) => {
     if (!match) throw new ApiError(401, "Invalid credentials");
 
     const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: "7d" });
-    logger.info(`Login success for ${email}`);
+    logger.info(`Login success for email: ${email}`);
 
     return {
         token,
