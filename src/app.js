@@ -39,7 +39,7 @@ app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/transaction", transactionRoutes);
 
 const __dirname = path.resolve();
-app.use(express.static(path.join(__dirname, "src/public")));
+app.use(express.static(path.join(__dirname, "public")));
 
 // error middlewares
 app.use(errorLogger);
