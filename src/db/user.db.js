@@ -43,3 +43,15 @@ export const createUser = async ({ fullName, email, password, parentId }) => {
         throw new ApiError(500, `Failed to save user ${email} to DB: ${error}`);
     }
 };
+
+export const getUserWithAncestors = async (userId) => {
+    try {
+        logger.info(`getUserWithAncestors for userId: ${userId}`);
+        return await prisma.user.findUnique({
+            where: { id: userId },
+            include: { parent: { include: { parent: true } } },
+        });
+    } catch (error) {
+        throw new ApiError(500, `DB error in getUserWithAncestors: ${error}`);
+    }
+};
