@@ -2,10 +2,10 @@ import { MIN_PURCHASE } from "../constants.js";
 import * as purchaseDb from "../db/purchase.db.js";
 import { getUserWithAncestors } from "../db/user.db.js";
 import { creditEarnings } from "./earningsService.js";
-import { ApiError, logger } from "../utils/index.js";
+import { logger } from "../utils/index.js";
 
 export const recordPurchase = async ({ buyerId, amount }) => {
-logger.info(`Recording purchase of ₹${amount} by user ${buyerId}`);
+    logger.info(`Recording purchase of ₹${amount} by user ${buyerId}`);
 
     const purchase = await purchaseDb.createPurchase({ buyerId, amount });
     logger.info(`Purchase created with id: ${purchase.id}`);
