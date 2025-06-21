@@ -88,7 +88,7 @@ Create `.env` file:
 ```env
 PORT=4000
 JWT_SECRET=your_jwt_secret
-DATABASE_URL=postgresql://username:password@localhost:5432/referral_db
+DATABASE_URL=postgresql://anmol:anmol@localhost:5432/referral_db
 CORS_ORIGIN=*
 ```
 
@@ -130,7 +130,7 @@ Create `.env` file:
 ```env
 PORT=4000
 JWT_SECRET=your_jwt_secret
-DATABASE_URL=postgresql://username:password@localhost:5432/referral_db
+DATABASE_URL=postgresql://anmol:anmol@localhost:5432/referral_db
 CORS_ORIGIN=*
 ```
 
