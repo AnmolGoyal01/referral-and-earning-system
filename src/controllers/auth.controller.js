@@ -63,4 +63,50 @@ const logout = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, null, "Logout successful"));
 });
 
-export { register, login, getProfile, logout };
+const updateName = asyncHandler(async (req, res) => {
+    logger.info("inside update name controller");
+    const { fullName } = req.body;
+    if (!fullName) throw new ApiError(400, "fullName is required");
+    const user = req.user;
+    const updatedUser = await authService.updateName(user.id, fullName);
+    res.status(200).json(new ApiResponse(200, updatedUser, "Name updated"));
+});
+
+const updatePassword = asyncHandler(async (req, res) => {
+    logger.info("inside update password controller");
+    const { oldPassword, newPassword } = req.body;
+    if (!oldPassword || !newPassword)
+        throw new ApiError(400, "oldPassword and newPassword are required");
+    const user = req.user;
+    const updatedUser = await authService.updatePassword(
+        user.id,
+        oldPassword,
+        newPassword
+    );
+    res.status(200).json(new ApiResponse(200, updatedUser, "Password updated"));
+});
+
+const getParent = asyncHandler(async (req, res) => {
+    logger.info("inside get parent controller");
+    const user = req.user;
+    const parent = await authService.getParent(user.id);
+    res.status(200).json(new ApiResponse(200, parent, "Parent fetched"));
+});
+
+const getReferrals = asyncHandler(async (req, res) => {
+    logger.info("inside get referrals controller");
+    const user = req.user;
+    const referrals = await authService.getReferrals(user.id);
+    res.status(200).json(new ApiResponse(200, referrals, "Referrals fetched"));
+});
+
+export {
+    register,
+    login,
+    getProfile,
+    logout,
+    updateName,
+    updatePassword,
+    getParent,
+    getReferrals,
+};

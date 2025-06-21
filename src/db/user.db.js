@@ -55,3 +55,46 @@ export const getUserWithAncestors = async (userId) => {
         throw new ApiError(500, `DB error in getUserWithAncestors: ${error}`);
     }
 };
+
+export const updateUser = async (userId, data) => {
+    try {
+        logger.info(
+            `Updating user ${userId} with data: ${JSON.stringify(data)}`
+        );
+        return await prisma.user.update({
+            where: { id: userId },
+            data,
+            select: { id: true, fullName: true, email: true },
+        });
+    } catch (error) {
+        throw new ApiError(500, `DB error in updateUser: ${error}`);
+    }
+};
+
+export const getUserParent = async (userId) => {
+    try {
+        logger.info(`Getting parent for user ${userId}`);
+        return await prisma.user.findUnique({
+            where: { id: userId },
+            include: {
+                parent: {
+                    select: { id: true, fullName: true, email: true },
+                },
+            },
+        });
+    } catch (error) {
+        throw new ApiError(500, `DB error in getUserParent: ${error}`);
+    }
+};
+
+export const getReferralsByParentId = async (parentId) => {
+    try {
+        logger.info(`Getting referrals for parent ${parentId}`);
+        return await prisma.user.findMany({
+            where: { parentId },
+            select: { id: true, fullName: true, email: true },
+        });
+    } catch (error) {
+        throw new ApiError(500, `DB error in getReferralsByParentId: ${error}`);
+    }
+};

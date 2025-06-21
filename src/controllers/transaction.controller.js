@@ -10,6 +10,9 @@ export const createPurchase = asyncHandler(async (req, res) => {
     logger.info(`inside createPurchase controller`);
     const { amount } = req.body;
     if (!amount) throw new ApiError(400, "Amount is required");
+    if (isNaN(Number(amount)) || typeof Number(amount) !== "number")
+        throw new ApiError(400, "Amount must be a valid number");
+    if (amount <= 0) throw new ApiError(400, "Amount must be positive");
 
     const purchase = await recordPurchase({
         buyerId: req.user.id,

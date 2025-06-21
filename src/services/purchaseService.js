@@ -5,8 +5,7 @@ import { creditEarnings } from "./earningsService.js";
 import { ApiError, logger } from "../utils/index.js";
 
 export const recordPurchase = async ({ buyerId, amount }) => {
-    logger.info(`Recording purchase of ₹${amount} by user ${buyerId}`);
-    if (amount <= 0) throw new ApiError(400, "Amount must be positive");
+logger.info(`Recording purchase of ₹${amount} by user ${buyerId}`);
 
     const purchase = await purchaseDb.createPurchase({ buyerId, amount });
     logger.info(`Purchase created with id: ${purchase.id}`);
