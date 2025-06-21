@@ -100,6 +100,15 @@ const getReferrals = asyncHandler(async (req, res) => {
     res.status(200).json(new ApiResponse(200, referrals, "Referrals fetched"));
 });
 
+const getReferralCode = asyncHandler(async (req, res) => {
+    logger.info("inside get referral code controller");
+    const user = req.user;
+    const referralCode = user.id;
+    res.status(200).json(
+        new ApiResponse(200, referralCode, "Referral code fetched")
+    );
+});
+
 export {
     register,
     login,
@@ -109,4 +118,5 @@ export {
     updatePassword,
     getParent,
     getReferrals,
+    getReferralCode,
 };

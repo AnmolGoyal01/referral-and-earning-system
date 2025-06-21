@@ -8,6 +8,7 @@ import {
     updatePassword,
     getParent,
     getReferrals,
+    getReferralCode,
 } from "../controllers/auth.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 
@@ -21,5 +22,6 @@ router.patch("/update-name", verifyJWT, updateName);
 router.patch("/update-password", verifyJWT, updatePassword);
 router.get("/parent", verifyJWT, getParent);
 router.get("/referrals", verifyJWT, getReferrals);
+router.get("/referral-code", verifyJWT, getReferralCode);
 
 export default router;
