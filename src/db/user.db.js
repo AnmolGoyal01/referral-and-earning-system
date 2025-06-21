@@ -1,5 +1,5 @@
 import prisma from "./prismaClient.js";
-import { logger } from "../utils/logger.js";
+import { logger } from "../utils/index.js";
 import { ApiError } from "../utils/ApiError.js";
 
 export const findUserByEmail = async (email) => {
@@ -7,8 +7,7 @@ export const findUserByEmail = async (email) => {
         logger.info(`findUserByEmail: ${email}`);
         return await prisma.user.findUnique({ where: { email } });
     } catch (error) {
-        logger.error(`DB error in findUserByEmail: ${error}`);
-        throw new ApiError(409, "db error");
+        throw new ApiError(500, `DB error in findUserByEmail: ${error}`);
     }
 };
 
@@ -17,8 +16,7 @@ export const findUserById = async (id) => {
         logger.info(`findUserById: ${id}`);
         return await prisma.user.findUnique({ where: { id } });
     } catch (error) {
-        logger.error(`DB error in findUserById: ${error}`);
-        throw new ApiError(409, "db error");
+        throw new ApiError(500, `DB error in findUserById: ${error}`);
     }
 };
 
@@ -27,8 +25,10 @@ export const countReferralsByParentId = async (parentId) => {
         logger.info(`countReferralsByParentId for parent ${parentId}`);
         return await prisma.user.count({ where: { parentId } });
     } catch (error) {
-        logger.error(`DB error in countReferralsByParentId: ${error}`);
-        throw new ApiError(409, "db error");
+        throw new ApiError(
+            500,
+            `DB error in countReferralsByParentId: ${error}`
+        );
     }
 };
 
@@ -40,7 +40,6 @@ export const createUser = async ({ fullName, email, password, parentId }) => {
             select: { id: true, fullName: true, email: true, parentId: true },
         });
     } catch (error) {
-        logger.error(`Failed to save user ${email} to DB: ${error}`);
-        throw new ApiError(409, "db error");
+        throw new ApiError(500, `Failed to save user ${email} to DB: ${error}`);
     }
 };
