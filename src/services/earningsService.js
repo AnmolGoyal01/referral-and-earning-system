@@ -1,7 +1,7 @@
 import * as earningDb from "../db/earning.db.js";
 import { L1_RATE, L2_RATE } from "../constants.js";
 import { logger } from "../utils/index.js";
-// import { getIO } from "../socket/index.js";
+import { getIO } from "../socket/index.js";
 
 export const creditEarnings = async ({ buyer, purchase }) => {
     logger.info(`Crediting earnings for purchase ${purchase.id}`);
@@ -22,16 +22,16 @@ export const creditEarnings = async ({ buyer, purchase }) => {
         amount: l1Amount,
     });
     logger.info(`L1 earnings credited for purchase ${purchase.id}`);
-    // try {
-    //     getIO().to(`user_${parent.id}`).emit("new-earning", {
-    //         level: 1,
-    //         amount: l1Amount,
-    //     });
-    // } catch {}
-
-    // TODO: emit socket
-    
-    logger.info(`Emitting socket for user ${parent.id}`);
+    try {
+        logger.info(`Emitting socket for user ${parent.id}`);
+        getIO().to(`user_${parent.id}`).emit("new-earning", {
+            level: 1,
+            amount: l1Amount,
+            purchaseId: purchase.id,
+        });
+    } catch {
+        logger.error(`Error emitting socket for user ${parent.id}`);
+    }
 
     logger.info(`Checking if grandparent exists for buyer ${buyer.id}`);
     if (parent.parentId) {
@@ -50,13 +50,18 @@ export const creditEarnings = async ({ buyer, purchase }) => {
                 amount: l2Amount,
             });
             logger.info(`L2 earnings credited for purchase ${purchase.id}`);
-            // try {
-            //     getIO()
-            //         .to(`user_${grandParent.id}`)
-            //         .emit("new-earning", { level: 2, amount: l2Amount });
-            // } catch {}
-            // TODO: emit socket
-            logger.info(`Emitting socket for user ${grandParent.id}`);
+            try {
+                logger.info(`Emitting socket for user ${grandParent.id}`);
+                getIO().to(`user_${grandParent.id}`).emit("new-earning", {
+                    level: 2,
+                    amount: l2Amount,
+                    purchaseId: purchase.id,
+                });
+            } catch {
+                logger.error(
+                    `Error emitting socket for user ${grandParent.id}`
+                );
+            }
         }
     }
 

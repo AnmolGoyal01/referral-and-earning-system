@@ -7,8 +7,10 @@ process.on("unhandledRejection", (reason, promise) => {
 });
 
 import dotenv from "dotenv";
+import http from "http";
 import app from "./app.js";
 import { connectDB } from "./db/prismaClient.js";
+import { initSocketServer } from "./socket/index.js";
 
 dotenv.config({
     path: "./.env",
@@ -16,8 +18,11 @@ dotenv.config({
 
 const PORT = process.env.PORT || 4000;
 
+const httpServer = http.createServer(app);
+initSocketServer(httpServer);
+
 connectDB().then(() =>
-    app.listen(PORT, () => {
-        console.log(`App is listening on http://localhost:${PORT}`);
-    })
+    httpServer.listen(PORT, () =>
+        console.log(`HTTP & Socket.IO on http://localhost:${PORT}`)
+    )
 );
