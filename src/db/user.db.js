@@ -4,7 +4,7 @@ import { ApiError } from "../utils/ApiError.js";
 
 export const findUserByEmail = async (email) => {
     try {
-        logger.info(`findUserByEmail: ${email}`);
+        logger.info(`findUserByEmail for email: ${email}`);
         return await prisma.user.findUnique({ where: { email } });
     } catch (error) {
         throw new ApiError(500, `DB error in findUserByEmail: ${error}`);
@@ -13,7 +13,7 @@ export const findUserByEmail = async (email) => {
 
 export const findUserById = async (id) => {
     try {
-        logger.info(`findUserById: ${id}`);
+        logger.info(`findUserById for id: ${id}`);
         return await prisma.user.findUnique({ where: { id } });
     } catch (error) {
         throw new ApiError(500, `DB error in findUserById: ${error}`);
@@ -22,7 +22,7 @@ export const findUserById = async (id) => {
 
 export const countReferralsByParentId = async (parentId) => {
     try {
-        logger.info(`countReferralsByParentId for parent ${parentId}`);
+        logger.info(`countReferralsByParentId for parentId: ${parentId}`);
         return await prisma.user.count({ where: { parentId } });
     } catch (error) {
         throw new ApiError(
@@ -34,7 +34,7 @@ export const countReferralsByParentId = async (parentId) => {
 
 export const createUser = async ({ fullName, email, password, parentId }) => {
     try {
-        logger.info(`Creating new user: ${email}`);
+        logger.info(`Creating new user with email: ${email}`);
         return await prisma.user.create({
             data: { fullName, email, password, parentId: parentId ?? null },
             select: { id: true, fullName: true, email: true, parentId: true },
