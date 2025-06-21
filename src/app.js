@@ -7,6 +7,7 @@ import {
     requestLogger,
     errorLogger,
 } from "./middlewares/index.js";
+import path from "path";
 
 const app = express();
 
@@ -36,6 +37,9 @@ import transactionRoutes from "./routes/transaction.routes.js";
 // routes declaration
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/transaction", transactionRoutes);
+
+const __dirname = path.resolve();
+app.use(express.static(path.join(__dirname, "src/public")));
 
 // error middlewares
 app.use(errorLogger);
